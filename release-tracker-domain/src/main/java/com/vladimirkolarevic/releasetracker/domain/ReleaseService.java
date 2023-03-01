@@ -12,4 +12,6 @@ public interface ReleaseService {
 
      void delete(String id);
 
+     Long count();
+
 }
