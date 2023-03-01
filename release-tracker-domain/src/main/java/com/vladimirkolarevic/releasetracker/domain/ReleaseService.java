@@ -1,16 +1,17 @@
 package com.vladimirkolarevic.releasetracker.domain;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ReleaseService {
 
      Release save(Release release);
 
-     Release get(String id);
+     Release get(UUID uuid);
 
      List<Release> list();
 
-     void delete(String id);
+     void delete(UUID uuid);
 
      Long count();
 
