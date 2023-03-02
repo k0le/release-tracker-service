@@ -1,17 +1,19 @@
 package com.vladimirkolarevic.releasetracker.domain;
 
+import com.vladimirkolarevic.releasetracker.domain.exception.ReleaseTrackerException;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface ReleaseService {
 
-     Release save(Release release);
+     Release save(Release release) throws ReleaseTrackerException;
 
-     Release get(UUID uuid);
+     Release get(UUID uuid) throws ReleaseTrackerException;
 
-     List<Release> list();
+     List<Release> list() throws ReleaseTrackerException;
 
-     void delete(UUID uuid);
+     void delete(UUID uuid) throws ReleaseTrackerException;
 
      Long count();
 
