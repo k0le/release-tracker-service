@@ -9,7 +9,7 @@ public interface ReleaseService {
 
      Release save(Release release) throws ReleaseTrackerException;
 
-     Release get(UUID uuid) throws ReleaseTrackerException;
+     Release get(UUID id) throws ReleaseTrackerException;
 
      List<Release> list() throws ReleaseTrackerException;
 

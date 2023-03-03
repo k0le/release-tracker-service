@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+
+    <changeSet id="202303022025" author="vladimir.kolarevic">
+        <sql>
+            CREATE TYPE releaseStatus AS ENUM ('CREATED', 'IN_DEVELOPMENT','ON_DEV,QA_DONE_ON_DEV','ON_STAGING','QA_DONE_ON_STAGING','ON_PROD','DONE');
+        </sql>
+        <createTable tableName="release_jpa_entity">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="uuid" type="uuid">
+            </column>
+            <column name="name" type="varchar(255)">
+
+            </column>
+            <column name="description" type="text">
+
+            </column>
+            <column name="status" type="releaseStatus" >
+            </column>
+            <column name="created_at" type="timestamp">
+
+            </column>
+            <column name="last_update_at" type="timestamp">
+
+            </column>
+            <column name="release_date" type="date">
+
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
