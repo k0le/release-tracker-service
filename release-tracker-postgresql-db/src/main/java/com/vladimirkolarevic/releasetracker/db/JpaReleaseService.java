@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class JpaReleaseService implements ReleaseService {
+class JpaReleaseService implements ReleaseService {
 
     private final ReleaseJpaRepository releaseJpaRepository;
 
