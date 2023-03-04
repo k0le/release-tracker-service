@@ -168,6 +168,50 @@ class ReleaseTrackerPostgresDbTest {
         assertThat(total).isEqualTo(1);
     }
 
+    @Test
+    void givenRelease_saved_updated(){
+        var uuid= UUID.randomUUID();
+        var release = createRelease(
+                uuid,
+                "Create release",
+                "Release Created",
+                ReleaseStatus.CREATED,
+                LocalDate.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now());
+
+        releaseService.save(release);
+        var savedRelease = releaseService.get(uuid);
+
+        assertThat(savedRelease).isNotNull()
+                .hasFieldOrPropertyWithValue("id", release.id())
+                .hasFieldOrPropertyWithValue("name", release.name())
+                .hasFieldOrPropertyWithValue("description", release.description())
+                .hasFieldOrPropertyWithValue("status", release.status())
+                .hasFieldOrPropertyWithValue("releaseDate", release.releaseDate())
+                .hasFieldOrPropertyWithValue("createdAt", release.createdAt())
+                .hasFieldOrPropertyWithValue("lastUpdateAt", release.lastUpdateAt());
+        var releaseChanges = createRelease(
+                uuid,
+                "Release Done",
+                "Release Done",
+                ReleaseStatus.DONE,
+                LocalDate.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now());
+        releaseService.update(releaseChanges);
+
+        var foundRelease = releaseService.get(uuid);
+
+        assertThat(foundRelease).isNotNull()
+                .hasFieldOrPropertyWithValue("id", releaseChanges.id())
+                .hasFieldOrPropertyWithValue("name", releaseChanges.name())
+                .hasFieldOrPropertyWithValue("description", releaseChanges.description())
+                .hasFieldOrPropertyWithValue("status", releaseChanges.status())
+                .hasFieldOrPropertyWithValue("releaseDate", releaseChanges.releaseDate())
+                .hasFieldOrPropertyWithValue("createdAt", releaseChanges.createdAt())
+                .hasFieldOrPropertyWithValue("lastUpdateAt", releaseChanges.lastUpdateAt());
+    }
 
     private static Stream<Arguments> streamReleases() {
         return Stream.of(
