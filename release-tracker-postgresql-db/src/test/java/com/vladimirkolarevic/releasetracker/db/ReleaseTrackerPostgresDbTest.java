@@ -307,7 +307,7 @@ class ReleaseTrackerPostgresDbTest {
             LocalDateTime.now(),
             LocalDateTime.now());
         releaseService.save(release);
-        var savedReleases = releaseService.list();
+        var savedReleases = releaseService.list(null, null, null, null, null, null);
 
         assertThat(savedReleases).isNotEmpty().hasSize(1).element(0)
             .hasFieldOrPropertyWithValue("id", release.id())

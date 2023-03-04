@@ -123,7 +123,7 @@ class JpaReleaseServiceTest {
                         releaseDate,
                         createdAt,
                         lastUpdateAt)));
-        var releases = jpaReleaseService.list();
+        var releases = jpaReleaseService.list(null, null, null, null, null, null);
         assertThat(releases)
             .hasSize(1)
             .anySatisfy(release -> {
@@ -140,7 +140,7 @@ class JpaReleaseServiceTest {
     @Test
     void givenEmptyList_returnEmptyList() {
         when(releaseJpaRepository.findAll()).thenReturn(List.of());
-        var releases = jpaReleaseService.list();
+        var releases = jpaReleaseService.list(null, null, null, null, null, null);
         assertThat(releases).isEmpty();
     }
 

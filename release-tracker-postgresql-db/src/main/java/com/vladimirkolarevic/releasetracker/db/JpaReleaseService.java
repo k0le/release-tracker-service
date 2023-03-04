@@ -2,9 +2,12 @@ package com.vladimirkolarevic.releasetracker.db;
 
 import com.vladimirkolarevic.releasetracker.domain.Release;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseService;
+import com.vladimirkolarevic.releasetracker.domain.ReleaseStatus;
 import com.vladimirkolarevic.releasetracker.domain.exception.NonExistentReleaseException;
 import com.vladimirkolarevic.releasetracker.domain.exception.ReleaseTrackerException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.mapstruct.factory.Mappers;
@@ -39,7 +42,12 @@ class JpaReleaseService implements ReleaseService {
     }
 
     @Override
-    public List<Release> list() {
+    public List<Release> list(String name,
+                              String description,
+                              ReleaseStatus status,
+                              LocalDate releaseDate,
+                              LocalDateTime createdAt,
+                              LocalDateTime lastUpdateAt) {
         return releaseJpaRepository.findAll().stream().map(mapper::toDomain).toList();
     }
 
