@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @ComponentScan
-public class ReleaseTrackerConfig {
+class ReleaseTrackerConfig {
 }

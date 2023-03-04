@@ -4,6 +4,7 @@ import com.vladimirkolarevic.releasetracker.domain.Release;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseService;
 import com.vladimirkolarevic.releasetracker.domain.exception.NonExistentReleaseException;
 import com.vladimirkolarevic.releasetracker.domain.exception.ReleaseTrackerException;
+import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ class JpaReleaseService implements ReleaseService {
         this.releaseJpaRepository = releaseJpaRepository;
     }
 
+    @Transactional
     @Override
     public Release save(Release release) {
         var releaseJpaToSave = mapper.fromDomain(release);
@@ -42,6 +44,7 @@ class JpaReleaseService implements ReleaseService {
         return releaseJpaRepository.findAll().stream().map(mapper::toDomain).toList();
     }
 
+    @Transactional
     @Override
     public void delete(UUID uuid) {
         releaseJpaRepository

@@ -1,5 +1,7 @@
 package com.vladimirkolarevic.releasetracker.db;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
@@ -8,6 +10,7 @@ import java.util.UUID;
 @MappedSuperclass
 class BaseJpaEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private UUID uuid;
 

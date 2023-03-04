@@ -3,6 +3,10 @@ package com.vladimirkolarevic.releasetracker.db;
 
 import com.vladimirkolarevic.releasetracker.db.BaseJpaEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import org.hibernate.annotations.Type;
+import org.hibernate.usertype.UserType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +17,8 @@ class ReleaseJpaEntity extends BaseJpaEntity {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Type(value = PostgresEnumType.class)
     private ReleaseStatusJpaEntity status;
 
     private LocalDate releaseDate;
