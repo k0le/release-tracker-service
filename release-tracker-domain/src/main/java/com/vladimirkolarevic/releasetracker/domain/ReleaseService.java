@@ -15,6 +15,8 @@ public interface ReleaseService {
 
      void delete(UUID uuid) throws ReleaseTrackerException;
 
+     Release update(Release release) throws ReleaseTrackerException;
+
      Long count();
 
 }
