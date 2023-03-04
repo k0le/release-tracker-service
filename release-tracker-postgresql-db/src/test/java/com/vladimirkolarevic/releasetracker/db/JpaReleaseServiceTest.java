@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class JpaReleaseServiceTest {
+class JpaReleaseServiceTest {
 
     @Mock
     private ReleaseJpaRepository releaseJpaRepository;
