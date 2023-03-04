@@ -57,6 +57,21 @@ class JpaReleaseService implements ReleaseService {
 
     }
 
+    @Transactional
+    @Override
+    public Release update(Release release) throws ReleaseTrackerException {
+        return releaseJpaRepository.findByUuid(release.id()).map(releaseJpaEntity -> {
+            releaseJpaEntity.setName(release.name());
+            releaseJpaEntity.setDescription(release.description());
+            releaseJpaEntity.setReleaseDate(release.releaseDate());
+            var releaseStatusJpaEntity = release.status()!=null?ReleaseStatusJpaEntity.valueOf(release.status().name()):null;
+            releaseJpaEntity.setStatus(releaseStatusJpaEntity);
+            releaseJpaEntity.setLastUpdateAt(release.lastUpdateAt());
+            releaseJpaEntity.setCreatedAt(release.createdAt());
+            return releaseJpaEntity;
+        }).map(mapper::toDomain).get();
+    }
+
     @Override
     public Long count() {
         return releaseJpaRepository.count();

@@ -5,7 +5,11 @@ import com.vladimirkolarevic.releasetracker.domain.Release;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseService;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseStatus;
 import com.vladimirkolarevic.releasetracker.domain.exception.NonExistentReleaseException;
-import org.assertj.core.api.Assertions;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import org.hibernate.Session;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,7 +17,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,9 +34,27 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest(classes = ReleaseTrackerConfig.class)
 @ContextConfiguration(initializers = PostgreSQLContainerInitializer.class)
 @EnableAutoConfiguration
-class ReleaseTrackerPostgresDbIT {
+class ReleaseTrackerPostgresDbTest {
     @Autowired
     private ReleaseService releaseService;
+
+
+    @Autowired
+    EntityManager entityManager;
+
+    @Autowired
+    TransactionTemplate transactionTemplate;
+
+    @AfterEach
+    @Transactional
+    public void tearDown(){
+        transactionTemplate.execute(transactionStatus->{
+            entityManager.createQuery("DELETE FROM ReleaseJpaEntity").executeUpdate();
+            transactionStatus.flush();
+            return null;
+        });
+
+    }
 
     @ParameterizedTest
     @MethodSource("streamReleases")
