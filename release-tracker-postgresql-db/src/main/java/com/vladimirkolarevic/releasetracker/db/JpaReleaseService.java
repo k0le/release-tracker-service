@@ -5,11 +5,10 @@ import com.vladimirkolarevic.releasetracker.domain.ReleaseService;
 import com.vladimirkolarevic.releasetracker.domain.exception.NonExistentReleaseException;
 import com.vladimirkolarevic.releasetracker.domain.exception.ReleaseTrackerException;
 import jakarta.transaction.Transactional;
-import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
+import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
 
 @Service
 class JpaReleaseService implements ReleaseService {
@@ -33,10 +32,10 @@ class JpaReleaseService implements ReleaseService {
     @Override
     public Release get(UUID uuid) {
         return releaseJpaRepository
-                .findByUuid(uuid)
-                .map(mapper::toDomain)
-                .orElseThrow(() -> new NonExistentReleaseException(String
-                        .format("Release with uuid: %s is not found", uuid)));
+            .findByUuid(uuid)
+            .map(mapper::toDomain)
+            .orElseThrow(() -> new NonExistentReleaseException(String
+                .format("Release with uuid: %s is not found", uuid)));
     }
 
     @Override
@@ -48,11 +47,11 @@ class JpaReleaseService implements ReleaseService {
     @Override
     public void delete(UUID uuid) {
         releaseJpaRepository
-                .findByUuid(uuid)
-                .map(ReleaseJpaEntity::getId)
-                .ifPresentOrElse(this::deleteById, () -> {
-                            throw new NonExistentReleaseException(String.format("Release with uuid: %s is not found", uuid));
-                        });
+            .findByUuid(uuid)
+            .map(ReleaseJpaEntity::getId)
+            .ifPresentOrElse(this::deleteById, () -> {
+                throw new NonExistentReleaseException(String.format("Release with uuid: %s is not found", uuid));
+            });
 
 
     }
@@ -64,7 +63,8 @@ class JpaReleaseService implements ReleaseService {
             releaseJpaEntity.setName(release.name());
             releaseJpaEntity.setDescription(release.description());
             releaseJpaEntity.setReleaseDate(release.releaseDate());
-            var releaseStatusJpaEntity = release.status()!=null?ReleaseStatusJpaEntity.valueOf(release.status().name()):null;
+            var releaseStatusJpaEntity =
+                release.status() != null ? ReleaseStatusJpaEntity.valueOf(release.status().name()) : null;
             releaseJpaEntity.setStatus(releaseStatusJpaEntity);
             releaseJpaEntity.setLastUpdateAt(release.lastUpdateAt());
             releaseJpaEntity.setCreatedAt(release.createdAt());

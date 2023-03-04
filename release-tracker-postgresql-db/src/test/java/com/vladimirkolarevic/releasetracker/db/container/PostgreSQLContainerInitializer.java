@@ -1,14 +1,12 @@
 package com.vladimirkolarevic.releasetracker.db.container;
 
+import java.util.Map;
+import java.util.stream.Stream;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.lifecycle.Startables;
-
-import java.util.Map;
-import java.util.stream.Stream;
 
 public class PostgreSQLContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -20,10 +18,10 @@ public class PostgreSQLContainerInitializer implements ApplicationContextInitial
 
     private static Map<String, Object> createConnectionConfiguration() {
         return Map.of(
-                "spring.datasource.url", postgreSQLContainer.getJdbcUrl(),
-                "spring.datasource.username", postgreSQLContainer.getUsername(),
-                "spring.datasource.password", postgreSQLContainer.getPassword(),
-                "spring.liquibase.driver-class-name",postgreSQLContainer.getDriverClassName()
+            "spring.datasource.url", postgreSQLContainer.getJdbcUrl(),
+            "spring.datasource.username", postgreSQLContainer.getUsername(),
+            "spring.datasource.password", postgreSQLContainer.getPassword(),
+            "spring.liquibase.driver-class-name", postgreSQLContainer.getDriverClassName()
         );
     }
 
@@ -31,7 +29,7 @@ public class PostgreSQLContainerInitializer implements ApplicationContextInitial
     public void initialize(ConfigurableApplicationContext applicationContext) {
         startContainer();
         var configurableEnvironment = applicationContext.getEnvironment();
-        var testcontainers = new MapPropertySource("testcontainers",createConnectionConfiguration());
+        var testcontainers = new MapPropertySource("testcontainers", createConnectionConfiguration());
         configurableEnvironment.getPropertySources().addFirst(testcontainers);
     }
 }

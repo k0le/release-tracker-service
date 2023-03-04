@@ -1,15 +1,13 @@
 package com.vladimirkolarevic.releasetracker.db;
 
 
-import com.vladimirkolarevic.releasetracker.db.BaseJpaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import org.hibernate.annotations.Type;
-import org.hibernate.usertype.UserType;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.Type;
+
 @Entity
 class ReleaseJpaEntity extends BaseJpaEntity {
 
