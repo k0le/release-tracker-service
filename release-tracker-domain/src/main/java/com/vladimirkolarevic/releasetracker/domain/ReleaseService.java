@@ -11,7 +11,7 @@ public interface ReleaseService {
 
      Release get(UUID id) throws ReleaseTrackerException;
 
-     List<Release> list() throws ReleaseTrackerException;
+     List<Release> list();
 
      void delete(UUID uuid) throws ReleaseTrackerException;
 
