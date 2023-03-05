@@ -53,14 +53,14 @@ public class ReleaseRestController {
     }
 
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ReleaseResponse> updateRelease(@PathVariable("id") String id,
                                                          @RequestBody ReleaseRequest releaseRequest) {
         var updatedRelease = releaseRestService.update(id, releaseRequest);
         return ResponseEntity.status(updatedRelease.httpStatus()).body(updatedRelease);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") String id) {
         releaseRestService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

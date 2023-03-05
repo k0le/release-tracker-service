@@ -44,13 +44,13 @@ class ReleaseRestService {
     public ReleaseResponse save(ReleaseRequest releaseRequest) {
         var release = releaseRestMapper.toDomain(releaseRequest, null);
         var savedRelease = releaseService.save(release);
-        return releaseRestMapper.toView(savedRelease);
+        return releaseRestMapper.toView(savedRelease,HttpStatus.CREATED);
     }
 
     public ReleaseResponse update(String id, ReleaseRequest releaseRequest) {
         var uuid = UUID.fromString(id);
         var foundRelease = releaseService.get(uuid);
-        HttpStatus httpStatus = foundRelease != null ? HttpStatus.CREATED : HttpStatus.OK;
+        HttpStatus httpStatus = foundRelease != null ? HttpStatus.OK : HttpStatus.CREATED;
         var release = releaseRestMapper.toDomain(releaseRequest, uuid);
         var updatedRelease = releaseService.update(release);
         return releaseRestMapper.toView(updatedRelease, httpStatus);

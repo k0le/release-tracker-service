@@ -28,6 +28,9 @@ class JpaReleaseServiceTest {
     @Mock
     private ReleaseJpaRepository releaseJpaRepository;
 
+    @Mock
+    private CriteriaRepository criteriaRepository;
+
 
     @InjectMocks
     private JpaReleaseService jpaReleaseService;
@@ -112,7 +115,7 @@ class JpaReleaseServiceTest {
         var createdAt = LocalDateTime.now();
         var lastUpdateAt = LocalDateTime.now();
 
-        when(releaseJpaRepository.findAll())
+        when(criteriaRepository.filter(null,null,null,null,null,null))
             .thenReturn(
                 List.of(
                     createReleaseJpaEntityRandomId(
@@ -139,7 +142,7 @@ class JpaReleaseServiceTest {
 
     @Test
     void givenEmptyList_returnEmptyList() {
-        when(releaseJpaRepository.findAll()).thenReturn(List.of());
+        when(criteriaRepository.filter(null,null,null,null,null,null)).thenReturn(List.of());
         var releases = jpaReleaseService.list(null, null, null, null, null, null);
         assertThat(releases).isEmpty();
     }

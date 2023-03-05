@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 class JpaReleaseService implements ReleaseService {
 
     private final ReleaseJpaRepository releaseJpaRepository;
+    private final CriteriaRepository criteriaRepository;
 
     private final ReleaseMapper mapper = Mappers.getMapper(ReleaseMapper.class);
 
-    public JpaReleaseService(ReleaseJpaRepository releaseJpaRepository) {
+    public JpaReleaseService(ReleaseJpaRepository releaseJpaRepository, CriteriaRepository criteriaRepository) {
         this.releaseJpaRepository = releaseJpaRepository;
+        this.criteriaRepository = criteriaRepository;
     }
 
     @Transactional
@@ -48,7 +50,7 @@ class JpaReleaseService implements ReleaseService {
                               LocalDate releaseDate,
                               LocalDateTime createdAt,
                               LocalDateTime lastUpdateAt) {
-        return releaseJpaRepository.findAll().stream().map(mapper::toDomain).toList();
+        return criteriaRepository.filter(name,description,status,releaseDate,createdAt,lastUpdateAt).stream().map(mapper::toDomain).toList();
     }
 
     @Transactional
