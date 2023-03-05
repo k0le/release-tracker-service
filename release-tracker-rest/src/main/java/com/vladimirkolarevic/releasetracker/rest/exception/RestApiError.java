@@ -1,4 +1,7 @@
 package com.vladimirkolarevic.releasetracker.rest.exception;
 
-public record RestApiError() {
+public record RestApiError(
+    String message
+) {
+
 }

@@ -2,6 +2,7 @@ package com.vladimirkolarevic.releasetracker.rest;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,6 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladimirkolarevic.releasetracker.domain.Release;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseService;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseStatus;
+import com.vladimirkolarevic.releasetracker.domain.exception.NonExistentReleaseException;
+import com.vladimirkolarevic.releasetracker.domain.exception.ReleaseTrackerException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +28,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -201,6 +205,16 @@ class ReleaseTrackerRestApplicationTests {
     }
 
     @Test
+    void givenRelease_delete_throwReleaseTrackerException() throws Exception {
+        var uuid = UUID.randomUUID();
+        doThrow(new ReleaseTrackerException("Exception while deleting")).when(releaseService).delete(uuid);
+
+        mockMvc.perform(delete(RELEASES_URL.concat("/").concat(uuid.toString())))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("Exception while deleting"));
+    }
+
+    @Test
     void givenRelease_get() throws Exception {
         var uuid = UUID.randomUUID();
         var release =
@@ -219,6 +233,17 @@ class ReleaseTrackerRestApplicationTests {
             .andExpect(jsonPath("$.releaseDate").value(release.releaseDate().format(DateTimeFormatter.ISO_DATE)))
             .andExpect(jsonPath("$.id").isNotEmpty());
     }
+
+    @Test
+    void givenRelease_get_throwNonExistentReleaseException() throws Exception {
+        var uuid = UUID.randomUUID();
+
+        when(releaseService.get(uuid)).thenThrow(new NonExistentReleaseException("Release do not exists"));
+        mockMvc.perform(get(RELEASES_URL.concat("/").concat(uuid.toString())))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").value("Release do not exists"));
+    }
+
 
     private static Stream<Arguments> releasesStream() {
         var release =
