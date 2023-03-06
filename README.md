@@ -93,3 +93,7 @@ Is used for generating table
 ## Postman collection
 
 If you want to manually test api use [postman collection](Release%20tracker.postman_collection.json)
+
+## Prometheus and Graphana
+[prometheus](docker-compose/docker-compose-prometheus.yml)
+[graphana](docker-compose/docker-compose-graphana.yml)
