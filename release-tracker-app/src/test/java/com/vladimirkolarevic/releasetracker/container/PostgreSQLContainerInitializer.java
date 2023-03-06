@@ -1,4 +1,4 @@
-package com.vladimirkolarevic.releasetracker.db.container;
+package com.vladimirkolarevic.releasetracker.container;
 
 import java.util.Map;
 import java.util.stream.Stream;

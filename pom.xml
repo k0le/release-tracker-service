@@ -12,7 +12,7 @@
         <module>release-tracker-domain</module>
         <module>release-tracker-postgresql-db</module>
         <module>release-tracker-rest</module>
-        <!--       <module>release-tracker-app</module>-->
+        <module>release-tracker-app</module>
     </modules>
 
 </project>

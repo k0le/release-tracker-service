@@ -38,7 +38,7 @@ public class RestApiExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public RestApiError handleBadRequestException(Exception exception, WebRequest webRequest) {
-        LOGGER.debug("Internal server error, for web request : {}", webRequest.getDescription(false));
+        LOGGER.error("Internal server error, for web request : {} and exception : {}", webRequest.getDescription(false),exception);
         return new RestApiError(exception.getMessage());
     }
 }
