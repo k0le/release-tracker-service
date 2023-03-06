@@ -4,7 +4,7 @@ Service is used for release manipulation
 This is part of Backend assignment
 
 # Technologies
-- Java
+- Java 17
 - Maven
 - Spring boot
 - Postgres
