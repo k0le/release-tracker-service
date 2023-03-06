@@ -4,11 +4,11 @@ Service is used for release manipulation
 This is part of Backend assignment
 
 # Technologies
--Java
--Maven
--Spring boot
--Postgres
--Docker
+- Java
+- Maven
+- Spring boot
+- Postgres
+- Docker
 
 ## Project structure
 Project is using multimodules
