@@ -9,6 +9,7 @@ This is part of Backend assignment
 - Spring boot
 - Postgres
 - Docker
+- Liquibase
 
 ## Project structure
 Project is using multimodules
@@ -64,3 +65,7 @@ Project is using checkstyle for code formatting
 
 ## Swagger
 If you want to check [api documentation](http://localhost:8080/swagger-ui/index.html) 
+
+## Liquibase
+Is used for generating table
+[liquibase](release-tracker-postgresql-db/src/main/resources/db/changelog)
