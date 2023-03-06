@@ -28,7 +28,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -39,17 +38,47 @@ import org.springframework.util.LinkedMultiValueMap;
 @WebMvcTest(controllers = ReleaseRestController.class)
 @ContextConfiguration(classes = ReleaseRestConfig.class)
 class ReleaseTrackerRestApplicationTests {
+    private static final String RELEASES_URL = "/v1/releases";
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private ReleaseService releaseService;
 
-    private static final String RELEASES_URL = "/v1/releases";
+    private static Stream<Arguments> releasesStream() {
+        var release =
+            new Release(UUID.randomUUID(), "Created release", "Test release", ReleaseStatus.CREATED, LocalDate.now(),
+                LocalDateTime.now(), LocalDateTime.now());
+        var release2 =
+            new Release(UUID.randomUUID(), "Release Done", "Test release done", ReleaseStatus.DONE, LocalDate.now(),
+                LocalDateTime.now(), LocalDateTime.now());
+        var releaseResponse = new ReleaseResponse(release.id(), release.name(), release.description(),
+            ReleaseResponseStatus.valueOf(release.status().name()),
+            release.releaseDate().format(DateTimeFormatter.ISO_DATE),
+            release.createdAt().format(DateTimeFormatter.ISO_DATE_TIME),
+            release.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME), null);
 
+        var releaseResponse2 = new ReleaseResponse(release2.id(), release2.name(), release2.description(),
+            ReleaseResponseStatus.valueOf(release2.status().name()),
+            release2.releaseDate().format(DateTimeFormatter.ISO_DATE),
+            release2.createdAt().format(DateTimeFormatter.ISO_DATE_TIME),
+            release2.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME), null);
+
+        return Stream.of(
+            Arguments.of(
+                null, null, null, null, null, null, List.of(release, release2),
+                List.of(releaseResponse, releaseResponse2)
+            ),
+            Arguments.of(
+                "Release Done", null, null, null, null, null, List.of(release2), List.of(releaseResponse2)
+            ),
+            Arguments.of(
+                null, null, ReleaseStatus.DONE, null, null, null, List.of(release2), List.of(releaseResponse2)
+            )
+        );
+
+    }
 
     @ParameterizedTest
     @MethodSource("releasesStream")
@@ -105,28 +134,26 @@ class ReleaseTrackerRestApplicationTests {
     void givenRelease_saved() throws Exception {
         var release =
             new Release(null, "Created release", "Test release", ReleaseStatus.CREATED, LocalDate.now(),
-                LocalDateTime.now(), LocalDateTime.now());
+                null, null);
 
         var returnedRelease = new Release(UUID.randomUUID(), release.name(), release.description(), release.status(),
-            release.releaseDate(), release.createdAt(), release.lastUpdateAt());
+            release.releaseDate(), LocalDateTime.now(), LocalDateTime.now());
 
         var releaseRequest = new ReleaseRequest(release.name(), release.description(),
             ReleaseResponseStatus.valueOf(release.status().name()),
-            DateTimeFormatter.ISO_DATE.format(release.releaseDate()),
-            DateTimeFormatter.ISO_DATE_TIME.format(release.createdAt()),
-            DateTimeFormatter.ISO_DATE_TIME.format(release.lastUpdateAt()));
+            DateTimeFormatter.ISO_DATE.format(release.releaseDate()));
 
         var requestBody = objectMapper.writeValueAsString(releaseRequest);
 
         when(releaseService.save(release)).thenReturn(returnedRelease);
         mockMvc.perform(post(RELEASES_URL).content(requestBody).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.name").value(release.name()))
-            .andExpect(jsonPath("$.description").value(release.description()))
-            .andExpect(jsonPath("$.status").value(ReleaseResponseStatus.valueOf(release.status().name()).name()))
-            .andExpect(jsonPath("$.createdAt").value(release.createdAt().format(DateTimeFormatter.ISO_DATE_TIME)))
-            .andExpect(jsonPath("$.lastUpdateAt").value(release.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME)))
-            .andExpect(jsonPath("$.releaseDate").value(release.releaseDate().format(DateTimeFormatter.ISO_DATE)))
+            .andExpect(jsonPath("$.name").value(returnedRelease.name()))
+            .andExpect(jsonPath("$.description").value(returnedRelease.description()))
+            .andExpect(jsonPath("$.status").value(ReleaseResponseStatus.valueOf(returnedRelease.status().name()).name()))
+            .andExpect(jsonPath("$.createdAt").value(returnedRelease.createdAt().format(DateTimeFormatter.ISO_DATE_TIME)))
+            .andExpect(jsonPath("$.lastUpdateAt").value(returnedRelease.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME)))
+            .andExpect(jsonPath("$.releaseDate").value(returnedRelease.releaseDate().format(DateTimeFormatter.ISO_DATE)))
             .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -135,30 +162,28 @@ class ReleaseTrackerRestApplicationTests {
         var uuid = UUID.randomUUID();
         var release =
             new Release(uuid, "Created release", "Test release", ReleaseStatus.CREATED, LocalDate.now(),
-                LocalDateTime.now(), LocalDateTime.now());
+                null, null);
 
         var returnedRelease = new Release(uuid, release.name(), release.description(), release.status(),
-            release.releaseDate(), release.createdAt(), release.lastUpdateAt());
-
+            release.releaseDate(), LocalDateTime.now(), LocalDateTime.now());
 
 
         var releaseRequest = new ReleaseRequest(release.name(), release.description(),
             ReleaseResponseStatus.valueOf(release.status().name()),
-            DateTimeFormatter.ISO_DATE.format(release.releaseDate()),
-            DateTimeFormatter.ISO_DATE_TIME.format(release.createdAt()),
-            DateTimeFormatter.ISO_DATE_TIME.format(release.lastUpdateAt()));
+            DateTimeFormatter.ISO_DATE.format(release.releaseDate()));
 
         var requestBody = objectMapper.writeValueAsString(releaseRequest);
         when(releaseService.update(release)).thenThrow(NonExistentReleaseException.class);
         when(releaseService.save(release)).thenReturn(returnedRelease);
-        mockMvc.perform(put(RELEASES_URL.concat("/").concat(uuid.toString())).content(requestBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(RELEASES_URL.concat("/").concat(uuid.toString())).content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.name").value(release.name()))
-            .andExpect(jsonPath("$.description").value(release.description()))
-            .andExpect(jsonPath("$.status").value(ReleaseResponseStatus.valueOf(release.status().name()).name()))
-            .andExpect(jsonPath("$.createdAt").value(release.createdAt().format(DateTimeFormatter.ISO_DATE_TIME)))
-            .andExpect(jsonPath("$.lastUpdateAt").value(release.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME)))
-            .andExpect(jsonPath("$.releaseDate").value(release.releaseDate().format(DateTimeFormatter.ISO_DATE)))
+            .andExpect(jsonPath("$.name").value(returnedRelease.name()))
+            .andExpect(jsonPath("$.description").value(returnedRelease.description()))
+            .andExpect(jsonPath("$.status").value(ReleaseResponseStatus.valueOf(returnedRelease.status().name()).name()))
+            .andExpect(jsonPath("$.createdAt").value(returnedRelease.createdAt().format(DateTimeFormatter.ISO_DATE_TIME)))
+            .andExpect(jsonPath("$.lastUpdateAt").value(returnedRelease.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME)))
+            .andExpect(jsonPath("$.releaseDate").value(returnedRelease.releaseDate().format(DateTimeFormatter.ISO_DATE)))
             .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -167,30 +192,28 @@ class ReleaseTrackerRestApplicationTests {
         var uuid = UUID.randomUUID();
         var release =
             new Release(uuid, "Created release", "Test release", ReleaseStatus.CREATED, LocalDate.now(),
-                LocalDateTime.now(), LocalDateTime.now());
+                null, null);
 
         var returnedRelease = new Release(uuid, release.name(), release.description(), release.status(),
-            release.releaseDate(), release.createdAt(), release.lastUpdateAt());
-
+            release.releaseDate(), LocalDateTime.now(), LocalDateTime.now());
 
 
         var releaseRequest = new ReleaseRequest(release.name(), release.description(),
             ReleaseResponseStatus.valueOf(release.status().name()),
-            DateTimeFormatter.ISO_DATE.format(release.releaseDate()),
-            DateTimeFormatter.ISO_DATE_TIME.format(release.createdAt()),
-            DateTimeFormatter.ISO_DATE_TIME.format(release.lastUpdateAt()));
+            DateTimeFormatter.ISO_DATE.format(release.releaseDate()));
 
         var requestBody = objectMapper.writeValueAsString(releaseRequest);
         when(releaseService.get(uuid)).thenReturn(release);
         when(releaseService.update(release)).thenReturn(returnedRelease);
-        mockMvc.perform(put(RELEASES_URL.concat("/").concat(uuid.toString())).content(requestBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(RELEASES_URL.concat("/").concat(uuid.toString())).content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value(release.name()))
-            .andExpect(jsonPath("$.description").value(release.description()))
-            .andExpect(jsonPath("$.status").value(ReleaseResponseStatus.valueOf(release.status().name()).name()))
-            .andExpect(jsonPath("$.createdAt").value(release.createdAt().format(DateTimeFormatter.ISO_DATE_TIME)))
-            .andExpect(jsonPath("$.lastUpdateAt").value(release.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME)))
-            .andExpect(jsonPath("$.releaseDate").value(release.releaseDate().format(DateTimeFormatter.ISO_DATE)))
+            .andExpect(jsonPath("$.name").value(returnedRelease.name()))
+            .andExpect(jsonPath("$.description").value(returnedRelease.description()))
+            .andExpect(jsonPath("$.status").value(ReleaseResponseStatus.valueOf(returnedRelease.status().name()).name()))
+            .andExpect(jsonPath("$.createdAt").value(returnedRelease.createdAt().format(DateTimeFormatter.ISO_DATE_TIME)))
+            .andExpect(jsonPath("$.lastUpdateAt").value(returnedRelease.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME)))
+            .andExpect(jsonPath("$.releaseDate").value(returnedRelease.releaseDate().format(DateTimeFormatter.ISO_DATE)))
             .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -242,41 +265,6 @@ class ReleaseTrackerRestApplicationTests {
         mockMvc.perform(get(RELEASES_URL.concat("/").concat(uuid.toString())))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("Release do not exists"));
-    }
-
-
-    private static Stream<Arguments> releasesStream() {
-        var release =
-            new Release(UUID.randomUUID(), "Created release", "Test release", ReleaseStatus.CREATED, LocalDate.now(),
-                LocalDateTime.now(), LocalDateTime.now());
-        var release2 =
-            new Release(UUID.randomUUID(), "Release Done", "Test release done", ReleaseStatus.DONE, LocalDate.now(),
-                LocalDateTime.now(), LocalDateTime.now());
-        var releaseResponse = new ReleaseResponse(release.id(), release.name(), release.description(),
-            ReleaseResponseStatus.valueOf(release.status().name()),
-            release.releaseDate().format(DateTimeFormatter.ISO_DATE),
-            release.createdAt().format(DateTimeFormatter.ISO_DATE_TIME),
-            release.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME), null);
-
-        var releaseResponse2 = new ReleaseResponse(release2.id(), release2.name(), release2.description(),
-            ReleaseResponseStatus.valueOf(release2.status().name()),
-            release2.releaseDate().format(DateTimeFormatter.ISO_DATE),
-            release2.createdAt().format(DateTimeFormatter.ISO_DATE_TIME),
-            release2.lastUpdateAt().format(DateTimeFormatter.ISO_DATE_TIME), null);
-
-        return Stream.of(
-            Arguments.of(
-                null, null, null, null, null, null, List.of(release, release2),
-                List.of(releaseResponse, releaseResponse2)
-            ),
-            Arguments.of(
-                "Release Done", null, null, null, null, null, List.of(release2), List.of(releaseResponse2)
-            ),
-            Arguments.of(
-                null, null, ReleaseStatus.DONE, null, null, null, List.of(release2), List.of(releaseResponse2)
-            )
-        );
-
     }
 
 }

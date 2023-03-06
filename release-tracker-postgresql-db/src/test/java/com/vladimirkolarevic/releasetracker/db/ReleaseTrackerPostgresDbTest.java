@@ -258,8 +258,8 @@ class ReleaseTrackerPostgresDbTest {
             .hasFieldOrPropertyWithValue("description", sourceRelease.description())
             .hasFieldOrPropertyWithValue("status", sourceRelease.status())
             .hasFieldOrPropertyWithValue("releaseDate", sourceRelease.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", sourceRelease.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", sourceRelease.lastUpdateAt());
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull();
     }
 
     @ParameterizedTest
@@ -273,8 +273,8 @@ class ReleaseTrackerPostgresDbTest {
             .hasFieldOrPropertyWithValue("description", sourceRelease.description())
             .hasFieldOrPropertyWithValue("status", sourceRelease.status())
             .hasFieldOrPropertyWithValue("releaseDate", sourceRelease.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", sourceRelease.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", sourceRelease.lastUpdateAt());
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull();
 
     }
 
@@ -315,8 +315,8 @@ class ReleaseTrackerPostgresDbTest {
             .hasFieldOrPropertyWithValue("description", release.description())
             .hasFieldOrPropertyWithValue("status", release.status())
             .hasFieldOrPropertyWithValue("releaseDate", release.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", release.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", release.lastUpdateAt());
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull();
     }
 
     @Test
@@ -380,8 +380,8 @@ class ReleaseTrackerPostgresDbTest {
             .hasFieldOrPropertyWithValue("description", release.description())
             .hasFieldOrPropertyWithValue("status", release.status())
             .hasFieldOrPropertyWithValue("releaseDate", release.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", release.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", release.lastUpdateAt());
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull();
         var releaseChanges = createRelease(
             uuid,
             "Release Done",
@@ -400,7 +400,7 @@ class ReleaseTrackerPostgresDbTest {
             .hasFieldOrPropertyWithValue("description", releaseChanges.description())
             .hasFieldOrPropertyWithValue("status", releaseChanges.status())
             .hasFieldOrPropertyWithValue("releaseDate", releaseChanges.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", releaseChanges.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", releaseChanges.lastUpdateAt());
+            .hasFieldOrPropertyWithValue("createdAt", savedRelease.createdAt())
+            .hasFieldOrProperty("lastUpdateAt").isNotNull();
     }
 }

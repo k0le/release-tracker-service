@@ -12,31 +12,33 @@
             CREATE TYPE releasestatusjpaentity AS ENUM ('CREATED', 'IN_DEVELOPMENT','ON_DEV','QA_DONE_ON_DEV','ON_STAGING','QA_DONE_ON_STAGING','ON_PROD','DONE');
         </sql>
         <sql>
-            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+            CREATE
+            EXTENSION IF NOT EXISTS "uuid-ossp";
         </sql>
         <createTable tableName="release_jpa_entity">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="uuid" type="uuid">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
-
+                <constraints nullable="false"/>
             </column>
             <column name="description" type="text">
-
+                <constraints nullable="false"/>
             </column>
             <column name="status" type="releasestatusjpaentity">
+                <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp">
-
+                <constraints nullable="false"/>
             </column>
             <column name="last_update_at" type="timestamp">
-
+                <constraints nullable="false"/>
             </column>
             <column name="release_date" type="date">
-
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>

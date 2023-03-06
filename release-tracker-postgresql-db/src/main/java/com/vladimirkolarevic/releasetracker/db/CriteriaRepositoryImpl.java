@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -26,22 +25,22 @@ public class CriteriaRepositoryImpl implements CriteriaRepository {
         if (name != null) {
             whereClause = criteriaBuilder.and(criteriaBuilder.equal(rootRelease.get("name"), name));
         }
-        if(description!=null){
+        if (description != null) {
             whereClause = criteriaBuilder.and(criteriaBuilder.equal(rootRelease.get("description"), description));
         }
-        if(status!=null){
+        if (status != null) {
             whereClause = criteriaBuilder.and(criteriaBuilder.equal(rootRelease.get("status"), status.name()));
         }
-        if(releaseDate!=null){
+        if (releaseDate != null) {
             whereClause = criteriaBuilder.and(criteriaBuilder.equal(rootRelease.get("status"), releaseDate));
         }
-        if(createdAt!=null){
+        if (createdAt != null) {
             whereClause = criteriaBuilder.and(criteriaBuilder.equal(rootRelease.get("createdAt"), createdAt));
         }
-        if(lastUpdateAt!=null){
+        if (lastUpdateAt != null) {
             whereClause = criteriaBuilder.and(criteriaBuilder.equal(rootRelease.get("lastUpdateAt"), lastUpdateAt));
         }
-        if(whereClause != null) {
+        if (whereClause != null) {
             criteriaQuery.where(whereClause);
         }
         return entityManager.createQuery(criteriaQuery).getResultList();

@@ -27,11 +27,11 @@ interface ReleaseRestMapper {
 
     @Named("toFormattedDateTime")
     default String toFormattedDateTime(LocalDateTime localDateTime) {
-        return localDateTime.format(DateTimeFormatter.ISO_DATE_TIME);
+        return localDateTime != null ? localDateTime.format(DateTimeFormatter.ISO_DATE_TIME) : null;
     }
 
     @Named("toFormattedDate")
     default String toFormattedDate(LocalDate localDate) {
-        return localDate.format(DateTimeFormatter.ISO_DATE);
+        return localDate != null ? localDate.format(DateTimeFormatter.ISO_DATE) : null;
     }
 }

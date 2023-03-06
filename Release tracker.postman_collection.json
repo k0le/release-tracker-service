@@ -1,0 +1,109 @@
+{
+	"info": {
+		"_postman_id": "5bc3fe84-dde8-46cb-84f4-a94e7bee6602",
+		"name": "Release tracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create release",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test 1\",\n    \"description\": \"test 2\",\n    \"status\": \"CREATED\",\n    \"releaseDate\": \"2023-10-11\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/releases",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"releases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter releases",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/releases",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"releases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update release",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test 1\",\n        \"description\": null,\n        \"status\": null,\n        \"releaseDate\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/releases/1f3b5761-b8c6-4fdf-b926-b8a857421209",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"releases",
+						"1f3b5761-b8c6-4fdf-b926-b8a857421209"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/releases/1f3b5761-b8c6-4fdf-b926-b8a857421209",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"releases",
+						"1f3b5761-b8c6-4fdf-b926-b8a857421209"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

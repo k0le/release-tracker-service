@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/v1/releases")
 public class ReleaseRestController {
 
@@ -69,7 +70,7 @@ public class ReleaseRestController {
         @ApiResponse(responseCode = "400", description = "Error data", content = @Content(schema = @Schema(implementation = RestApiError.class)))
     })
     @PostMapping
-    public ResponseEntity<ReleaseResponse> saveRelease(@RequestBody ReleaseRequest releaseRequest) {
+    public ResponseEntity<ReleaseResponse> saveRelease(@Valid @RequestBody ReleaseRequest releaseRequest) {
         var releaseResponse = releaseRestService.save(releaseRequest);
         return ResponseEntity.status(releaseResponse.httpStatus()).body(releaseResponse);
     }
@@ -83,7 +84,7 @@ public class ReleaseRestController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<ReleaseResponse> updateRelease(@PathVariable("id") String id,
-                                                         @RequestBody ReleaseRequest releaseRequest) {
+                                                         @Valid @RequestBody ReleaseRequest releaseRequest) {
         var updatedRelease = releaseRestService.update(id, releaseRequest);
         return ResponseEntity.status(updatedRelease.httpStatus()).body(updatedRelease);
     }

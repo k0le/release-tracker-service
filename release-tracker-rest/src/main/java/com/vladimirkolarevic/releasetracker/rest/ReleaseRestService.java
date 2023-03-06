@@ -46,7 +46,7 @@ class ReleaseRestService {
     public ReleaseResponse save(ReleaseRequest releaseRequest) {
         var release = releaseRestMapper.toDomain(releaseRequest, null);
         var savedRelease = releaseService.save(release);
-        return releaseRestMapper.toView(savedRelease,HttpStatus.CREATED);
+        return releaseRestMapper.toView(savedRelease, HttpStatus.CREATED);
     }
 
     public ReleaseResponse update(String id, ReleaseRequest releaseRequest) {
@@ -56,7 +56,7 @@ class ReleaseRestService {
         Release updatedRelease = null;
         try {
             updatedRelease = releaseService.update(release);
-        }catch (NonExistentReleaseException e){
+        } catch (NonExistentReleaseException e) {
             httpStatus = HttpStatus.CREATED;
             updatedRelease = releaseService.save(release);
         }

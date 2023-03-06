@@ -115,7 +115,7 @@ class JpaReleaseServiceTest {
         var createdAt = LocalDateTime.now();
         var lastUpdateAt = LocalDateTime.now();
 
-        when(criteriaRepository.filter(null,null,null,null,null,null))
+        when(criteriaRepository.filter(null, null, null, null, null, null))
             .thenReturn(
                 List.of(
                     createReleaseJpaEntityRandomId(
@@ -142,7 +142,7 @@ class JpaReleaseServiceTest {
 
     @Test
     void givenEmptyList_returnEmptyList() {
-        when(criteriaRepository.filter(null,null,null,null,null,null)).thenReturn(List.of());
+        when(criteriaRepository.filter(null, null, null, null, null, null)).thenReturn(List.of());
         var releases = jpaReleaseService.list(null, null, null, null, null, null);
         assertThat(releases).isEmpty();
     }

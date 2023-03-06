@@ -35,20 +35,16 @@ import org.springframework.transaction.support.TransactionTemplate;
 class ReleaseTrackerAppApplicationTests {
 
     private static final String BASE_URL = "http://localhost:";
-    @Value(value = "${local.server.port}")
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Autowired
     EntityManager entityManager;
-
     @Autowired
     TransactionTemplate transactionTemplate;
+    @Value(value = "${local.server.port}")
+    private int port;
+    @Autowired
+    private TestRestTemplate restTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @AfterEach
     @Transactional
@@ -67,8 +63,7 @@ class ReleaseTrackerAppApplicationTests {
         var createdAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var lastUpdateAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequest =
-            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate,
-                createdAt, lastUpdateAt);
+            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate);
         var releaseRequestBody = objectMapper.writeValueAsString(releaseRequest);
         var requestEntity = RequestEntity.post(BASE_URL.concat(String.valueOf(port)).concat("/v1/releases"))
             .contentType(MediaType.APPLICATION_JSON).body(releaseRequestBody);
@@ -82,8 +77,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", "Test create release")
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.CREATED)
             .hasFieldOrPropertyWithValue("releaseDate", releaseDate)
-            .hasFieldOrPropertyWithValue("createdAt", createdAt)
-            .hasFieldOrPropertyWithValue("lastUpdateAt", lastUpdateAt)
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .extracting("id").isNotNull();
 
     }
@@ -95,8 +90,7 @@ class ReleaseTrackerAppApplicationTests {
         var createdAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var lastUpdateAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequest =
-            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate,
-                createdAt, lastUpdateAt);
+            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate);
         var releaseRequestBody = objectMapper.writeValueAsString(releaseRequest);
         var url = BASE_URL.concat(String.valueOf(port)).concat("/v1/releases").concat("/").concat(id.toString());
         var requestEntity = RequestEntity.put(url)
@@ -111,8 +105,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", "Test create release")
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.CREATED)
             .hasFieldOrPropertyWithValue("releaseDate", releaseDate)
-            .hasFieldOrPropertyWithValue("createdAt", createdAt)
-            .hasFieldOrPropertyWithValue("lastUpdateAt", lastUpdateAt)
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .hasFieldOrPropertyWithValue("id", id);
 
     }
@@ -124,8 +118,7 @@ class ReleaseTrackerAppApplicationTests {
         var createdAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var lastUpdateAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequest =
-            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate,
-                createdAt, lastUpdateAt);
+            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate);
         var releaseRequestBody = objectMapper.writeValueAsString(releaseRequest);
         var url = BASE_URL.concat(String.valueOf(port)).concat("/v1/releases").concat("/").concat(id.toString());
         var requestEntity = RequestEntity.put(url)
@@ -140,8 +133,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", releaseRequest.description())
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.CREATED)
             .hasFieldOrPropertyWithValue("releaseDate", releaseRequest.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", releaseRequest.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", releaseRequest.lastUpdateAt())
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .hasFieldOrPropertyWithValue("id", id);
 
         var releaseDateUpdate = DateTimeFormatter.ISO_DATE.format(LocalDate.now());
@@ -149,8 +142,7 @@ class ReleaseTrackerAppApplicationTests {
         var lastUpdateAtUpdate = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequestUpdate =
             new ReleaseRequest("Create release Update", "Test create release Update", ReleaseResponseStatus.DONE,
-                releaseDateUpdate,
-                createdAtUpdate, lastUpdateAtUpdate);
+                releaseDateUpdate);
         var releaseRequestBodyUpdate = objectMapper.writeValueAsString(releaseRequestUpdate);
         var requestEntityUpdate = RequestEntity.put(url)
             .contentType(MediaType.APPLICATION_JSON).body(releaseRequestBodyUpdate);
@@ -164,8 +156,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", releaseRequestUpdate.description())
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.DONE)
             .hasFieldOrPropertyWithValue("releaseDate", releaseRequestUpdate.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", releaseRequestUpdate.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", releaseRequestUpdate.lastUpdateAt())
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .hasFieldOrPropertyWithValue("id", id);
 
     }
@@ -176,8 +168,7 @@ class ReleaseTrackerAppApplicationTests {
         var createdAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var lastUpdateAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequest =
-            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate,
-                createdAt, lastUpdateAt);
+            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate);
         var releaseRequestBody = objectMapper.writeValueAsString(releaseRequest);
         var requestEntity = RequestEntity.post(BASE_URL.concat(String.valueOf(port)).concat("/v1/releases"))
             .contentType(MediaType.APPLICATION_JSON).body(releaseRequestBody);
@@ -191,8 +182,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", "Test create release")
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.CREATED)
             .hasFieldOrPropertyWithValue("releaseDate", releaseDate)
-            .hasFieldOrPropertyWithValue("createdAt", createdAt)
-            .hasFieldOrPropertyWithValue("lastUpdateAt", lastUpdateAt)
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .extracting("id").isNotNull();
         var id = responseEntity.getBody().id();
         var requestEntityDelete = RequestEntity.delete(
@@ -202,21 +193,21 @@ class ReleaseTrackerAppApplicationTests {
     }
 
     @Test
-    void delete_nonExisting_release_404(){
+    void delete_nonExisting_release_404() {
         var id = UUID.randomUUID();
         var requestEntityDelete = RequestEntity.delete(
             BASE_URL.concat(String.valueOf(port)).concat("/v1/releases").concat("/").concat(id.toString())).build();
         var responseEntityDelete = restTemplate.exchange(requestEntityDelete, Void.class);
         assertThat(responseEntityDelete).isNotNull().hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
     }
+
     @Test
     void givenRelease_saved_getById() throws JsonProcessingException {
         var releaseDate = DateTimeFormatter.ISO_DATE.format(LocalDate.now());
         var createdAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var lastUpdateAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequest =
-            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate,
-                createdAt, lastUpdateAt);
+            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate);
         var releaseRequestBody = objectMapper.writeValueAsString(releaseRequest);
         var requestEntity = RequestEntity.post(BASE_URL.concat(String.valueOf(port)).concat("/v1/releases"))
             .contentType(MediaType.APPLICATION_JSON).body(releaseRequestBody);
@@ -230,8 +221,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", "Test create release")
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.CREATED)
             .hasFieldOrPropertyWithValue("releaseDate", releaseDate)
-            .hasFieldOrPropertyWithValue("createdAt", createdAt)
-            .hasFieldOrPropertyWithValue("lastUpdateAt", lastUpdateAt)
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .extracting("id").isNotNull();
         var id = responseEntity.getBody().id();
         var requestEntityGet = RequestEntity.get(
@@ -246,13 +237,13 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", "Test create release")
             .hasFieldOrPropertyWithValue("status", ReleaseResponseStatus.CREATED)
             .hasFieldOrPropertyWithValue("releaseDate", releaseDate)
-            .hasFieldOrPropertyWithValue("createdAt", createdAt)
-            .hasFieldOrPropertyWithValue("lastUpdateAt", lastUpdateAt)
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .extracting("id").isNotNull().isEqualTo(id);
     }
 
     @Test
-    void getById_nonExistentId_404(){
+    void getById_nonExistentId_404() {
         var id = UUID.randomUUID();
         var requestEntityGet = RequestEntity.get(
             BASE_URL.concat(String.valueOf(port)).concat("/v1/releases").concat("/").concat(id.toString())).build();
@@ -269,8 +260,7 @@ class ReleaseTrackerAppApplicationTests {
         var createdAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var lastUpdateAt = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
         var releaseRequest =
-            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate,
-                createdAt, lastUpdateAt);
+            new ReleaseRequest("Create release", "Test create release", ReleaseResponseStatus.CREATED, releaseDate);
         var releaseRequestBody = objectMapper.writeValueAsString(releaseRequest);
         var requestEntity = RequestEntity.post(BASE_URL.concat(String.valueOf(port)).concat("/v1/releases"))
             .contentType(MediaType.APPLICATION_JSON).body(releaseRequestBody);
@@ -284,8 +274,8 @@ class ReleaseTrackerAppApplicationTests {
             .hasFieldOrPropertyWithValue("description", releaseRequest.description())
             .hasFieldOrPropertyWithValue("status", releaseRequest.status())
             .hasFieldOrPropertyWithValue("releaseDate", releaseRequest.releaseDate())
-            .hasFieldOrPropertyWithValue("createdAt", releaseRequest.createdAt())
-            .hasFieldOrPropertyWithValue("lastUpdateAt", releaseRequest.lastUpdateAt())
+            .hasFieldOrProperty("createdAt").isNotNull()
+            .hasFieldOrProperty("lastUpdateAt").isNotNull()
             .extracting("id").isNotNull();
 
         var requestEntityGet = RequestEntity.get(
@@ -307,8 +297,8 @@ class ReleaseTrackerAppApplicationTests {
                     .hasFieldOrPropertyWithValue("description", releaseRequest.description())
                     .hasFieldOrPropertyWithValue("status", releaseRequest.status())
                     .hasFieldOrPropertyWithValue("releaseDate", releaseRequest.releaseDate())
-                    .hasFieldOrPropertyWithValue("createdAt", releaseRequest.createdAt())
-                    .hasFieldOrPropertyWithValue("lastUpdateAt", releaseRequest.lastUpdateAt())
+                    .hasFieldOrProperty("createdAt").isNotNull()
+                    .hasFieldOrProperty("lastUpdateAt").isNotNull()
                     .extracting("id").isNotNull()
 
             );
