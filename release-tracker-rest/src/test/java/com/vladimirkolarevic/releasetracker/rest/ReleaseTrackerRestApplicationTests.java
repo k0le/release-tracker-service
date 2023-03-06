@@ -149,8 +149,8 @@ class ReleaseTrackerRestApplicationTests {
             DateTimeFormatter.ISO_DATE_TIME.format(release.lastUpdateAt()));
 
         var requestBody = objectMapper.writeValueAsString(releaseRequest);
-        when(releaseService.get(uuid)).thenReturn(null);
-        when(releaseService.update(release)).thenReturn(returnedRelease);
+        when(releaseService.update(release)).thenThrow(NonExistentReleaseException.class);
+        when(releaseService.save(release)).thenReturn(returnedRelease);
         mockMvc.perform(put(RELEASES_URL.concat("/").concat(uuid.toString())).content(requestBody).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.name").value(release.name()))

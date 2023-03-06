@@ -1,7 +1,9 @@
 package com.vladimirkolarevic.releasetracker.rest;
 
+import com.vladimirkolarevic.releasetracker.domain.Release;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseService;
 import com.vladimirkolarevic.releasetracker.domain.ReleaseStatus;
+import com.vladimirkolarevic.releasetracker.domain.exception.NonExistentReleaseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,10 +51,15 @@ class ReleaseRestService {
 
     public ReleaseResponse update(String id, ReleaseRequest releaseRequest) {
         var uuid = UUID.fromString(id);
-        var foundRelease = releaseService.get(uuid);
-        HttpStatus httpStatus = foundRelease != null ? HttpStatus.OK : HttpStatus.CREATED;
+        var httpStatus = HttpStatus.OK;
         var release = releaseRestMapper.toDomain(releaseRequest, uuid);
-        var updatedRelease = releaseService.update(release);
+        Release updatedRelease = null;
+        try {
+            updatedRelease = releaseService.update(release);
+        }catch (NonExistentReleaseException e){
+            httpStatus = HttpStatus.CREATED;
+            updatedRelease = releaseService.save(release);
+        }
         return releaseRestMapper.toView(updatedRelease, httpStatus);
     }
 

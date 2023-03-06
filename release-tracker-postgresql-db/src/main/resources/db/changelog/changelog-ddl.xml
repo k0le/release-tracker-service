@@ -11,11 +11,15 @@
         <sql>
             CREATE TYPE releasestatusjpaentity AS ENUM ('CREATED', 'IN_DEVELOPMENT','ON_DEV','QA_DONE_ON_DEV','ON_STAGING','QA_DONE_ON_STAGING','ON_PROD','DONE');
         </sql>
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
         <createTable tableName="release_jpa_entity">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="uuid" type="uuid">
+                <constraints nullable="false" />
             </column>
             <column name="name" type="varchar(255)">
 

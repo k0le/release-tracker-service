@@ -34,6 +34,7 @@ class JpaReleaseService implements ReleaseService {
     public Release save(Release release) {
         LOGGER.info("Release is saving {}",release);
         var releaseJpaToSave = mapper.fromDomain(release);
+        releaseJpaToSave.setUuid(release.id()!=null?release.id():UUID.randomUUID());
         var savedReleaseJpa = releaseJpaRepository.save(releaseJpaToSave);
         LOGGER.info("Release saved {}",release);
         return mapper.toDomain(savedReleaseJpa);
