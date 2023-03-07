@@ -11,6 +11,8 @@ This is part of Backend assignment
 - Postgres
 - Docker
 - Liquibase
+- Prometheus
+- Graphana
 
 ## Project structure
 
